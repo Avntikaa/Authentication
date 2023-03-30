@@ -19,6 +19,27 @@ e.preventDefault();
 setIsLoader(true);
 const enteredEmail=email.current.value;
 const enteredPassword=password.current.value;
+if(isLogin){
+try{
+const res=await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyD9GUyT_XYB3Ud1rD-7P0hYccPO8U_v6tw',{
+  method:'POST',
+  body:JSON.stringify({
+email:enteredEmail,
+password:enteredPassword,
+returnSecureToken:true
+  }),
+  headers:{
+    'Content-Type':'application/json'
+  }
+})
+console.log(res.json());
+setIsLoader(false);
+}
+catch(error){
+   setIsAlert(true);
+}
+}
+else{
 try{
 const res=await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyD9GUyT_XYB3Ud1rD-7P0hYccPO8U_v6tw',{
   method:'POST',
@@ -42,6 +63,7 @@ setIsLoader(false);
 catch(error){
   setIsAlert(true);
 console.log(error);
+}
 }
 }
   return (
