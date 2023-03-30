@@ -4,9 +4,11 @@ import Layout from './components/Layout/Layout';
 import UserProfile from './components/Profile/UserProfile';
 import AuthPage from './pages/AuthPage';
 import HomePage from './pages/HomePage';
+import { StateContext } from './store/StateContext';
 
 function App() {
   return (
+    <StateContext>
     <Layout>
       <Switch>
         <Route path='/' exact>
@@ -20,6 +22,7 @@ function App() {
         </Route>
       </Switch>
     </Layout>
+    </StateContext>
   );
 }
 

@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
+import { useStateContext } from '../../store/StateContext';
 
 import classes from './MainNavigation.module.css';
 
 const MainNavigation = () => {
+  const cxt=useStateContext();
   return (
     <header className={classes.header}>
       <Link to='/'>
@@ -11,13 +13,17 @@ const MainNavigation = () => {
       <nav>
         <ul>
           <li>
-            <Link to='/auth'>Login</Link>
+            {!cxt.isLogin &&<Link to='/auth'>Login</Link>}
           </li>
           <li>
-            <Link to='/profile'>Profile</Link>
+            {cxt.isLogin && <Link to='/profile'>Profile</Link>}
           </li>
           <li>
-            <button>Logout</button>
+            {cxt.isLogin && <button onClick={()=>{
+              cxt.setToken(null);
+              cxt.setIsLogin(false);
+              cxt.setLoginPage(true);
+            }}>Logout</button>}
           </li>
         </ul>
       </nav>

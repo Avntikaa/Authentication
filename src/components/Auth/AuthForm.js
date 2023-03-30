@@ -1,16 +1,18 @@
 import { useState, useRef } from 'react';
+import { useStateContext } from '../../store/StateContext';
 
 import classes from './AuthForm.module.css';
 
 const AuthForm = () => {
-  const [isLogin, setIsLogin] = useState(true);
+  const cxt=useStateContext();
   const [isLoader, setIsLoader] = useState(false);
   const[isAlert,setIsAlert]=useState(false);
 const email=useRef();
 const password=useRef();
+
   const switchAuthModeHandler = () => {
+    cxt.setLoginPage((prevState) => !prevState);
     console.log('cjnsjdcn')
-    setIsLogin((prevState) => !prevState);
   };
 
 
@@ -19,7 +21,7 @@ e.preventDefault();
 setIsLoader(true);
 const enteredEmail=email.current.value;
 const enteredPassword=password.current.value;
-if(isLogin){
+if(cxt.loginPage){
 try{
 const res=await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyD9GUyT_XYB3Ud1rD-7P0hYccPO8U_v6tw',{
   method:'POST',
@@ -32,11 +34,20 @@ returnSecureToken:true
     'Content-Type':'application/json'
   }
 })
-console.log(res.json());
+if(res.ok){
+  res.json().then((data)=>{
+console.log(data.idToken);
+cxt.setToken(data.idToken);
+
+  });
+}
 setIsLoader(false);
+    cxt.setIsLogin((prevState) => !prevState);
+cxt.setLoginPage(false);
 }
 catch(error){
    setIsAlert(true);
+   setIsLoader(false);
 }
 }
 else{
@@ -69,7 +80,7 @@ console.log(error);
   return (
     <section className={classes.auth}>
       {isAlert && alert('Auhtentication failed')}
-      <h1>{isLogin ? 'Login' : 'Sign Up'}</h1>
+      <h1>{cxt.loginPage ? 'Login' : 'Sign Up'}</h1>
       <form onSubmit={submitlogindetail}>
         <div className={classes.control}>
           <label htmlFor='email'>Your Email</label>
@@ -85,13 +96,13 @@ console.log(error);
           />
         </div>
         <div className={classes.actions}>
-{!isLoader && <button >{isLogin ? 'Login' : 'Create New Account'}</button>}
+{!isLoader && <button >{cxt.loginPage ? 'Login' : 'Create New Account'}</button>}
         <button
             type='button'
             className={classes.toggle}
             onClick={switchAuthModeHandler}
           >
-            {isLogin ? 'Create new account' : 'Login with existing account'}
+            {cxt.loginPage ? 'Create new account' : 'Login with existing account'}
           </button>
         </div>
         {isLoader && <p>sending request...</p>}
