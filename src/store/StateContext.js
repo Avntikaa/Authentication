@@ -17,6 +17,14 @@ setIsLogin(true);
 const[loginPage,setLoginPage]=useState(false);
 const[profilePage,setProfilePage]=useState(false);
 const[modalbox,setModalbox]=useState(true);
+if(isLogin){
+    setTimeout(()=>{
+      console.log('work');
+      localStorage.setItem('id','null');
+      setToken('null');
+        setIsLogin(false);
+      },150000)
+}
 const onLogout=()=>{
   console.log('success log out');
   setIsLogin(false);
