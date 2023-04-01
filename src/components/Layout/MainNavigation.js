@@ -13,17 +13,13 @@ const MainNavigation = () => {
       <nav>
         <ul>
           <li>
-            {!cxt.isLogin &&<Link to='/auth'>Login</Link>}
+            {!cxt.LoginPage && !cxt.isLogin && <Link to='/auth'>Login</Link>}
           </li>
           <li>
             {cxt.isLogin && <Link to='/profile'>Profile</Link>}
           </li>
           <li>
-            {cxt.isLogin && <button onClick={()=>{
-              cxt.setToken(null);
-              cxt.setIsLogin(false);
-              cxt.setLoginPage(true);
-            }}>Logout</button>}
+            {cxt.isLogin && <button onClick={cxt.onLogout}>Logout</button>}
           </li>
         </ul>
       </nav>

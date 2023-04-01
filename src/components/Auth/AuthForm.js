@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useStateContext } from '../../store/StateContext';
 
 import classes from './AuthForm.module.css';
@@ -11,8 +11,9 @@ const email=useRef();
 const password=useRef();
 
   const switchAuthModeHandler = () => {
+    cxt.setModalbox(true);
     cxt.setLoginPage((prevState) => !prevState);
-    console.log('cjnsjdcn')
+    console.log('LoginPage')
   };
 
 
@@ -36,14 +37,17 @@ returnSecureToken:true
 })
 if(res.ok){
   res.json().then((data)=>{
-console.log(data.idToken);
+console.log('Logg in successfully');
+cxt.setModalbox(false);
 cxt.setToken(data.idToken);
-
-  });
-}
+localStorage.setItem('id',data.idToken);
 setIsLoader(false);
     cxt.setIsLogin((prevState) => !prevState);
+    cxt.setProfilePage(true);
 cxt.setLoginPage(false);
+  });
+}
+
 }
 catch(error){
    setIsAlert(true);
@@ -68,8 +72,11 @@ if(!res.ok){
   console.log(data);
   throw new Error(res.json());
 }
-console.log('success');
+else{
+  console.log('Sign up in successfully');
 setIsLoader(false);
+
+}
 }
 catch(error){
   setIsAlert(true);
@@ -78,10 +85,11 @@ console.log(error);
 }
 }
   return (
-    <section className={classes.auth}>
-      {isAlert && alert('Auhtentication failed')}
+    <>
+   {cxt.modalbox &&  <section className={classes.auth}>
+    {isAlert && alert('Auhtentication failed')}
       <h1>{cxt.loginPage ? 'Login' : 'Sign Up'}</h1>
-      <form onSubmit={submitlogindetail}>
+    <form onSubmit={submitlogindetail}>
         <div className={classes.control}>
           <label htmlFor='email'>Your Email</label>
           <input type='email' ref={email} id='email' required />
@@ -106,8 +114,9 @@ console.log(error);
           </button>
         </div>
         {isLoader && <p>sending request...</p>}
-      </form>
-    </section>
+      </form></section>
+   }
+   </>
   );
 };
 

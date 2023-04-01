@@ -4,7 +4,6 @@ import classes from './ProfileForm.module.css';
 
 const ProfileForm = () => {
 const cxt=useStateContext();
-console.log(cxt.token);
   const newp=useRef();
   async function changePassword(e){
     e.preventDefault();
@@ -25,6 +24,8 @@ if(res.ok){
   res.json().then((data)=>{
 console.log(data.idToken);
   });
+      // cxt.setLoginPage((prevState) => !prevState);
+
 }
 else{
   console.log(res.json());
@@ -40,6 +41,7 @@ catch(error){
 
 
   return (
+    <>
     <form className={classes.form}>
       <div className={classes.control}>
         <label htmlFor='new-password'>New Password</label>
@@ -49,6 +51,8 @@ catch(error){
         <button onClick={changePassword}>Change Password</button>
       </div>
     </form>
+  
+  </>
   );
 }
 
